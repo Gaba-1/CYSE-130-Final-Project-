@@ -1,0 +1,108 @@
+file:///C:/Users/gabri/Downloads/AutomationAssignment.pdf - Python Scripts Link (pdf of the scripts)
+
+In case link is not working: Python Scripts in writing (same as the contents in the above link)
+
+import smtplib
+from email.message import EmailMessage
+import psutil
+import subprocess
+from scapy.all import *
+from email.mime.text import MIMEText
+import os
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+with open('C:\\Users\\srius\\Downloads\\HDFS_v1\\HDFS.log', 'r') as file:
+  logs = file.readlines() #The log file we found online that we are importing
+
+suspicious_logs = [log for log in logs if 'failed' in log.lower() or 'unauthorized' in log.lower()] #Scans for suspicious logs in our file
+
+# with open('summary_report.txt', 'w') as f:
+f = open('summary_report.txt', 'w') #opens summary_report.txt
+f.write(f"Total suspicious logs found: {len(suspicious_logs)}\n") #Lists the number of suspicious logs found
+for log in suspicious_logs: #Lists the suspicious logs
+  f.write(log + '\n')
+f.close #Closes summary_report.txt
+
+#Get CPU Usage
+cpu_usage = psutil.cpu_percent(interval=1) #Uses psutil to find the CPU usage as a percent
+print(f"CPU Usage: {cpu_usage}%")
+
+#Get Memory Usage
+memory_info = psutil.virtual_memory() #Uses psutil to find Memory usage as a percent
+print(f"Memory Usage: {memory_info.percent}%")
+
+with open('performance_log.txt', 'a') as f: #Opens performance_log.txt
+  f.write(f"CPU: {cpu_usage}%, Memory: {memory_info.percent}%\n") #Writes CPU and memory usage in performance_log.txt
+
+if cpu_usage > 0.1:
+  print("ALERT: High CPU usage detected!") #Outputs alert if CPU usage is > 0.1
+
+def send_alert(subject, body): #defining function to send email
+  msg = EmailMessage()
+  msg.set_content(body)
+  msg['Subject'] = subject
+  msg['From'] = 'sriusa.annamalai@gmail.com' #The email the alert is being sent from
+  msg['To'] = 'srideviannamalai02@gmail.com' #The email the alert is being sent to
+
+  with smtplib.SMTP_SSL('smtp.sendgrid.net', 465) as smtp:
+    smtp.login('apikey', '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') #Using Email API to send alert
+ 
+    try:
+      smtp.send_message(msg)
+    except Exception as e:
+      print(e)
+
+#Example: Send an alert when CPU usage is > 0.1
+if cpu_usage > 0.1:
+  send_alert('High CPU Usage Alert', f'CPU usage is {cpu_usage}%')
+
+def run_nmap(target): #Defining function: run_nmap
+  result = subprocess.run(['nmap', '-sV', target], capture_output=True, text=True) #Uses subprocess to scan for vulnerabilities
+  print(result.stdout)
+
+run_nmap('127.0.0.1') #scan local host
+
+def monitor_packets(pkt): #Defining function: monitor_packets
+  if pkt.haslayer(TCP) and pkt.haslayer(IP):
+    print(f"Source IP: {pkt[IP].src}, Destination IP: {pkt[IP].dst}")
+
+sniff(prn=monitor_packets, count=10) #Capture 10 packets
+
+ 
+
+
+https://gmuedu-my.sharepoint.com/:t:/g/personal/gashton2_gmu_edu/Ea-TXwyunalJg0BCb5fC2scB5Y7Xu_5ElPlxnwqbCv6YdQ?e=Igapjl - Summary Report for python script folder link
+
+In case link is not working: Summary Report in writing (same as the contents in the folder) 
+
+Total suspicious logs found: 9
+081109 211204 1543 WARN dfs.DataNode$DataTransfer: 10.251.194.147:50010:Failed to transfer blk_992101295951175683 to 10.251.214.112:50010 got java.io.IOException: Connection reset by peer
+
+081109 211831 1797 WARN dfs.DataNode$DataTransfer: 10.251.39.242:50010:Failed to transfer blk_5862064168004546076 to 10.251.35.1:50010 got java.io.IOException: Connection reset by peer
+
+081110 012427 5397 WARN dfs.DataNode$DataTransfer: 10.251.74.227:50010:Failed to transfer blk_-2942077810471468030 to 10.251.38.214:50010 got java.io.IOException: Connection reset by peer
+
+081110 104106 8875 WARN dfs.DataNode$DataTransfer: 10.251.123.132:50010:Failed to transfer blk_7162246307091465257 to 10.251.90.64:50010 got java.io.IOException: Connection reset by peer
+
+081110 104334 9146 WARN dfs.DataNode$DataTransfer: 10.251.105.189:50010:Failed to transfer blk_-1292779714385604878 to 10.251.91.32:50010 got java.io.IOException: Connection reset by peer
+
+081110 104521 8931 WARN dfs.DataNode$DataTransfer: 10.251.203.179:50010:Failed to transfer blk_9122720022222323339 to 10.251.91.32:50010 got java.io.IOException: Connection reset by peer
+
+081110 104552 9165 WARN dfs.DataNode$DataTransfer: 10.251.31.180:50010:Failed to transfer blk_3311461718180475343 to 10.251.91.32:50010 got java.io.IOException: Connection reset by peer
+
+081110 115900 10462 WARN dfs.DataNode$DataTransfer: 10.251.195.52:50010:Failed to transfer blk_-8122638974387556519 to 10.250.7.96:50010 got java.io.IOException: Connection reset by peer
+
+081111 072145 23306 WARN dfs.DataNode$DataTransfer: 10.251.67.211:50010:Failed to transfer blk_-2448583810301041956 to 10.251.71.97:50010 got java.io.IOException: Connection reset by peer
+
+
+https://gmuedu-my.sharepoint.com/:t:/g/personal/gashton2_gmu_edu/EfaHval2-ZxMhQPnMOdXtcIBKrPsa4ZQgHGmDV5zmawCVQ?e=PwnAkX - Log System Report for python script folder link
+
+In case link is not working: Log System Report in writing (same as contents in the folder) 
+
+CPU: 2.6%, Memory: 74.6%
+CPU: 3.6%, Memory: 76.1%
+CPU: 1.2%, Memory: 77.1%
+CPU: 1.1%, Memory: 77.4%
+CPU: 0.8%, Memory: 71.0%
+CPU: 1.0%, Memory: 76.5%

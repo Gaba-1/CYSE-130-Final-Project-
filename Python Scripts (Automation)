@@ -1,4 +1,4 @@
-file:///C:/Users/gabri/Downloads/AutomationAssignment.pdf - Python Scripts Link (pdf of the scripts)
+file:///C:/Users/gabri/Downloads/AutomationAssignment.pdf - Python Scripts Link (pdf of the scripts) 
 
 In case link is not working: Python Scripts in writing (same as the contents in the above link)
 
@@ -69,7 +69,6 @@ def monitor_packets(pkt): #Defining function: monitor_packets
 
 sniff(prn=monitor_packets, count=10) #Capture 10 packets
 
- 
 
 
 https://gmuedu-my.sharepoint.com/:t:/g/personal/gashton2_gmu_edu/Ea-TXwyunalJg0BCb5fC2scB5Y7Xu_5ElPlxnwqbCv6YdQ?e=Igapjl - Summary Report for python script folder link
